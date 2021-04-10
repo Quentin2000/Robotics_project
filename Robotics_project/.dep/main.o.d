@@ -132,24 +132,12 @@ build/obj/main.o: main.c \
  ../../lib/e-puck2_main-processor/ChibiOS//os/hal/include/serial_usb.h \
  ../../lib/e-puck2_main-processor/src/memory_protection.h \
  ../../lib/e-puck2_main-processor/src/usbcfg.h main.h \
- ../../lib/e-puck2_main-processor/src/camera/dcmi_camera.h \
- ../../lib/e-puck2_main-processor/ChibiOS_ext/os/hal/include/dcmi.h \
- ../../lib/e-puck2_main-processor/ChibiOS_ext/os/hal/include/../ports/STM32/STM32F4xx/dcmi_lld.h \
- ../../lib/e-puck2_main-processor/ChibiOS_ext/os/hal/include/../ports/STM32/STM32F4xx/stm32_registry.h \
- ../../lib/e-puck2_main-processor/ChibiOS_ext/os/hal/include/../ports/STM32/STM32F4xx/stm32_rcc.h \
- ../../lib/e-puck2_main-processor/src/camera/po8030.h \
  ../../lib/e-puck2_main-processor/src/msgbus/messagebus.h \
  /Users/quentin/Documents/Travail/Robotique/TP1_blinky/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/unistd.h \
  /Users/quentin/Documents/Travail/Robotique/TP1_blinky/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/unistd.h \
  ../../lib/e-puck2_main-processor/src/parameter/parameter.h \
  ../../lib/e-puck2_main-processor/ChibiOS//os/hal/lib/streams/chprintf.h \
- ../../lib/e-puck2_main-processor/src/motors.h \
- ../../lib/e-puck2_main-processor/src/audio/microphone.h \
- ../../lib/e-puck2_main-processor/src/audio/mp45dt02_processing.h \
- audio_processing.h fft.h communications.h \
- ../../lib/e-puck2_main-processor/ChibiOS//os/ext/CMSIS/include/arm_math.h \
- ../../lib/e-puck2_main-processor/ChibiOS//os/ext/CMSIS/include/core_cm4.h \
- /Users/quentin/Documents/Travail/Robotique/TP1_blinky/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/math.h
+ ../../lib/e-puck2_main-processor/src/motors.h
 
 /Users/quentin/Documents/Travail/Robotique/TP1_blinky/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/stdio.h:
 
@@ -421,18 +409,6 @@ mcuconf.h:
 
 main.h:
 
-../../lib/e-puck2_main-processor/src/camera/dcmi_camera.h:
-
-../../lib/e-puck2_main-processor/ChibiOS_ext/os/hal/include/dcmi.h:
-
-../../lib/e-puck2_main-processor/ChibiOS_ext/os/hal/include/../ports/STM32/STM32F4xx/dcmi_lld.h:
-
-../../lib/e-puck2_main-processor/ChibiOS_ext/os/hal/include/../ports/STM32/STM32F4xx/stm32_registry.h:
-
-../../lib/e-puck2_main-processor/ChibiOS_ext/os/hal/include/../ports/STM32/STM32F4xx/stm32_rcc.h:
-
-../../lib/e-puck2_main-processor/src/camera/po8030.h:
-
 ../../lib/e-puck2_main-processor/src/msgbus/messagebus.h:
 
 /Users/quentin/Documents/Travail/Robotique/TP1_blinky/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/unistd.h:
@@ -444,19 +420,3 @@ main.h:
 ../../lib/e-puck2_main-processor/ChibiOS//os/hal/lib/streams/chprintf.h:
 
 ../../lib/e-puck2_main-processor/src/motors.h:
-
-../../lib/e-puck2_main-processor/src/audio/microphone.h:
-
-../../lib/e-puck2_main-processor/src/audio/mp45dt02_processing.h:
-
-audio_processing.h:
-
-fft.h:
-
-communications.h:
-
-../../lib/e-puck2_main-processor/ChibiOS//os/ext/CMSIS/include/arm_math.h:
-
-../../lib/e-puck2_main-processor/ChibiOS//os/ext/CMSIS/include/core_cm4.h:
-
-/Users/quentin/Documents/Travail/Robotique/TP1_blinky/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/math.h:
