@@ -1,7 +1,7 @@
 #include <ch.h>
 #include <hal.h>
 #include <math.h>
-#include <messagebus.h>
+#include <msgbus/messagebus.h>
 #include <imu.h>
 
 #define STANDARD_GRAVITY    9.80665f
