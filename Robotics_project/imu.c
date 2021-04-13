@@ -35,7 +35,7 @@ void imu_compute_units(void){
 		imu_values.gyro_rate[i] = ( (imu_values.gyro_raw[i] - imu_values.gyro_offset[i]) 
 								  * DEG2RAD(GYRO_RAW2DPS) );
 	}
-}
+}//test
 
 void show_gravity(imu_msg_t *imu_values){
 
