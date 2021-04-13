@@ -1,4 +1,4 @@
-build/obj/i2c_bus.o: ../../lib/e-puck2_main-processor/src/i2c_bus.c \
+build/obj/i2c_bus.o: i2c_bus.c \
  ../../lib/e-puck2_main-processor/ChibiOS//os/hal/include/hal.h \
  ../../lib/e-puck2_main-processor/ChibiOS//os/hal/osal/rt/osal.h \
  /Users/quentin/Documents/Travail/Robotique/TP1_blinky/Tools/gcc-arm-none-eabi-7-2017-q4-major/lib/gcc/arm-none-eabi/7.2.1/include/stddef.h \
@@ -99,7 +99,7 @@ build/obj/i2c_bus.o: ../../lib/e-puck2_main-processor/src/i2c_bus.c \
  ../../lib/e-puck2_main-processor/ChibiOS_ext/os/hal/ports/STM32/STM32F4xx/stm32_registry.h \
  ../../lib/e-puck2_main-processor/ChibiOS//os/hal/include/mmc_spi.h \
  ../../lib/e-puck2_main-processor/ChibiOS//os/hal/include/serial_usb.h \
- ../../lib/e-puck2_main-processor/src/i2c_bus.h
+ i2c_bus.h
 
 ../../lib/e-puck2_main-processor/ChibiOS//os/hal/include/hal.h:
 
@@ -303,4 +303,4 @@ mcuconf.h:
 
 ../../lib/e-puck2_main-processor/ChibiOS//os/hal/include/serial_usb.h:
 
-../../lib/e-puck2_main-processor/src/i2c_bus.h:
+i2c_bus.h:

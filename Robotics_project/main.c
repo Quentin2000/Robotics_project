@@ -10,7 +10,7 @@
 #include <chprintf.h>
 #include <motors.h>
 
-
+messagebus_t bus;
 
 static void serial_start(void)
 {
@@ -47,6 +47,7 @@ int main(void)
     chSysInit();
     mpu_init();
 
+
     //starts the serial communication
     serial_start();
     //starts the USB communication
@@ -55,6 +56,10 @@ int main(void)
     timer12_start();
     //inits the motors
     motors_init();
+    //starts the IMU
+    imu_start();
+    //starts the time of flight sensor
+	VL53L0X_start();
 
 
     /* Infinite loop. */

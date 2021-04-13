@@ -1,41 +1,32 @@
 #include <ch.h>
 #include <hal.h>
+#include <main.h>
+#include "usbcfg.h"
+#include "chprintf.h"
+#include "i2c_bus.h"
+#include "imu.h"
+#include "exti.h"
 #include <math.h>
-#include <msgbus/messagebus.h>
-#include <imu.h>
-
-#define STANDARD_GRAVITY    9.80665f
-#define DEG2RAD(deg) (deg / 180 * M_PI)
-
-#define RES_2G		2.0f
-#define RES_250DPS	250.0f
-#define MAX_INT16	32768.0f
-
-#define ACC_RAW2G	 (RES_2G / MAX_INT16)	//2G scale for 32768 raw value
-#define GYRO_RAW2DPS (RES_250DPS / MAX_INT16)	//250DPS (degrees per second) scale for 32768 raw value
-
-extern messagebus_t bus;
+#include "../src/msgbus/messagebus.h"
 
 static imu_msg_t imu_values;
+
+static uint8_t accAxisFilteringInProgress = 0;
+static uint8_t accAxisFilteringState = 0;
+static uint8_t accAxisSelected = 0;
+static uint8_t accFilterSize = 0;
+static uint8_t accCalibrationInProgress = 0;
+
+static uint8_t gyroAxisFilteringInProgress = 0;
+static uint8_t gyroAxisFilteringState = 0;
+static uint8_t gyroAxisSelected = 0;
+static uint8_t gyroFilterSize = 0;
+static uint8_t gyroCalibrationInProgress = 0;
 
 static thread_t *imuThd;
 static bool imu_configured = false;
 
 /***************************INTERNAL FUNCTIONS************************************/
-
- /**
- * @brief   Computes the measurements of the imu into readable measurements
- * 			RAW accelerometer to m/s^2 acceleration
- * 			RAW gyroscope to rad/s speed
- */
-void imu_compute_units(void){
-	for(uint8_t i = 0 ; i < NB_AXIS ; i++){
-		imu_values.acceleration[i] = ( (imu_values.acc_raw[i] - imu_values.acc_offset[i]) 
-							         * STANDARD_GRAVITY * ACC_RAW2G);
-		imu_values.gyro_rate[i] = ( (imu_values.gyro_raw[i] - imu_values.gyro_offset[i]) 
-								  * DEG2RAD(GYRO_RAW2DPS) );
-	}
-}//test
 
 void show_gravity(imu_msg_t *imu_values){
 
@@ -156,11 +147,19 @@ void show_gravity(imu_msg_t *imu_values){
 }
 
  /**
- * @brief   Thread which updates the measurements and publishes them
+ * @brief   Thread which updates the measures and publishes them
  */
+static THD_WORKING_AREA(imu_reader_thd_wa, 512);
 static THD_FUNCTION(imu_reader_thd, arg) {
      (void) arg;
      chRegSetThreadName(__FUNCTION__);
+
+     event_listener_t imu_int;
+
+     /* Starts waiting for the external interrupts. */
+     chEvtRegisterMaskWithFlags(&exti_events, &imu_int,
+                                (eventmask_t)EXTI_EVENT_IMU_INT,
+                                (eventflags_t)EXTI_EVENT_IMU_INT);
 
      // Declares the topic on the bus.
      messagebus_topic_t imu_topic;
@@ -169,22 +168,80 @@ static THD_FUNCTION(imu_reader_thd, arg) {
      messagebus_topic_init(&imu_topic, &imu_topic_lock, &imu_topic_condvar, &imu_values, sizeof(imu_values));
      messagebus_advertise_topic(&bus, &imu_topic, "/imu");
 
+     uint8_t accCalibrationNumSamples = 0;
+     int32_t accCalibrationSum = 0;
+     uint8_t gyroCalibrationNumSamples = 0;
+     int32_t gyroCalibrationSum = 0;
      systime_t time;
 
      while (chThdShouldTerminateX() == false) {
     	 time = chVTGetSystemTime();
 
+      //    /* Waits for a measurement to come. */
+      //    chEvtWaitAny(EXTI_EVENT_IMU_INT);
+      //    //Clears the flag. Otherwise the event is always true
+    	 // chEvtGetAndClearFlags(&imu_int);
+
     	if(imu_configured == true){
 	 		/* Reads the incoming measurement. */
-			mpu9250_read(imu_values.gyro_raw, imu_values.acc_raw, &imu_values.status);
-			/* computes the raw values into readable values*/
-			imu_compute_units();
-     	}
+			mpu9250_read(	imu_values.gyro_rate, imu_values.acceleration, &imu_values.temperature, 
+							imu_values.magnetometer, imu_values.gyro_raw, imu_values.acc_raw, 
+							imu_values.gyro_offset, imu_values.acc_offset, &imu_values.status);
+    	}
 
-     	/* Publishes it on the bus. */
-		messagebus_topic_publish(&imu_topic, &imu_values, sizeof(imu_values));
 
-        chThdSleepUntilWindowed(time, time + MS2ST(4)); //reduced the sample rate to 250Hz
+         /* Publishes it on the bus. */
+         messagebus_topic_publish(&imu_topic, &imu_values, sizeof(imu_values));
+
+         if(accAxisFilteringInProgress) {
+         	switch(accAxisFilteringState) {
+ 				case 0:
+ 					imu_values.acc_offset[accAxisSelected] = 0;
+ 					accCalibrationSum = 0;
+ 					accCalibrationNumSamples = 0;
+ 					accAxisFilteringState = 1;
+ 					break;
+
+ 				case 1:
+ 					accCalibrationSum += imu_values.acc_raw[accAxisSelected];
+ 					accCalibrationNumSamples++;
+ 					if(accCalibrationNumSamples == accFilterSize) {
+ 						imu_values.acc_filtered[accAxisSelected] = accCalibrationSum/accFilterSize;
+ 						accAxisFilteringInProgress = 0;
+ 						if(accCalibrationInProgress == 1) {
+ 							imu_values.acc_offset[accAxisSelected] = imu_values.acc_filtered[accAxisSelected];
+ 							accCalibrationInProgress = 0;
+ 						}
+ 					}
+ 					break;
+         	}
+         }
+
+         if(gyroAxisFilteringInProgress) {
+         	switch(gyroAxisFilteringState) {
+ 				case 0:
+ 					imu_values.gyro_offset[gyroAxisSelected] = 0;
+ 					gyroCalibrationSum = 0;
+ 					gyroCalibrationNumSamples = 0;
+ 					gyroAxisFilteringState = 1;
+ 					break;
+
+ 				case 1:
+ 					gyroCalibrationSum += imu_values.gyro_raw[gyroAxisSelected];
+ 					gyroCalibrationNumSamples++;
+ 					if(gyroCalibrationNumSamples == gyroFilterSize) {
+ 						imu_values.gyro_filtered[gyroAxisSelected] = gyroCalibrationSum/gyroFilterSize;
+ 						gyroAxisFilteringInProgress = 0;
+ 						if(gyroCalibrationInProgress == 1) {
+ 							imu_values.gyro_offset[gyroAxisSelected] = imu_values.gyro_filtered[gyroAxisSelected];
+ 							gyroCalibrationInProgress = 0;
+ 						}
+ 					}
+ 					break;
+         	}
+         }
+
+         chThdSleepUntilWindowed(time, time + MS2ST(4)); //reduced the sample rate to 250Hz
 
      }
 }
@@ -197,6 +254,12 @@ static THD_FUNCTION(imu_reader_thd, arg) {
 void imu_start(void)
 {
 	int8_t status = MSG_OK;
+
+	if(imu_configured) {
+		return;
+	}
+
+	i2c_start();
 
     status = mpu9250_setup(MPU9250_ACC_FULL_RANGE_2G
 		                  | MPU9250_GYRO_FULL_RANGE_250DPS
@@ -213,7 +276,6 @@ void imu_start(void)
     	imu_configured = true;
     }
 
-    static THD_WORKING_AREA(imu_reader_thd_wa, 1024);
     imuThd = chThdCreateStatic(imu_reader_thd_wa, sizeof(imu_reader_thd_wa), NORMALPRIO, imu_reader_thd, NULL);
 }
 
@@ -221,88 +283,120 @@ void imu_stop(void) {
     chThdTerminate(imuThd);
     chThdWait(imuThd);
     imuThd = NULL;
+    imu_configured = false;
 }
 
-void imu_compute_offset(messagebus_topic_t * imu_topic, uint16_t nb_samples){
-
-    //creates temporary array used to store the sum for the average
-    int32_t temp_acc_offset[NB_AXIS] = {0};
-    int32_t temp_gyro_offset[NB_AXIS] = {0};
-
-    //sums nb_samples
-    for(uint16_t i = 0 ; i < nb_samples ; i++){
-        //waits for new measurements for IMU using MessageBus library
-        messagebus_topic_wait(imu_topic, &imu_values, sizeof(imu_values));
-        for(uint8_t j = 0 ; j < NB_AXIS ; j++){
-            temp_acc_offset[j] += imu_values.acc_raw[j];
-            temp_gyro_offset[j] += imu_values.gyro_raw[j];
-        }
-    }
-    //finishes the average by dividing the sums by nb_samples
-    //then stores the values to the good fields of imu_values to keep them
-    for(uint8_t j = 0 ; j < NB_AXIS ; j++){
-        temp_acc_offset[j]  /= nb_samples;
-        temp_gyro_offset[j] /= nb_samples;
-
-        imu_values.acc_offset[j] = temp_acc_offset[j];
-        imu_values.gyro_offset[j] = temp_gyro_offset[j];
-    }
-    //specific case for the z axis because it should not be zero but -1g
-    //deletes the standard gravity to have only the offset
-    imu_values.acc_offset[Z_AXIS] += (MAX_INT16 / RES_2G); //16384 = 1g with a scale of 2G
-}
-
+// Gets last axis value read from the sensor.
 int16_t get_acc(uint8_t axis) {
-	if(axis < NB_AXIS) {
+	if(axis < 3) {
 		return imu_values.acc_raw[axis];
 	}
 	return 0;
 }
 
 void get_acc_all(int16_t *values) {
-	values[X_AXIS] = imu_values.acc_raw[X_AXIS];
-	values[Y_AXIS] = imu_values.acc_raw[Y_AXIS];
-	values[Z_AXIS] = imu_values.acc_raw[Z_AXIS];
+	values[0] = imu_values.acc_raw[0];
+	values[1] = imu_values.acc_raw[1];
+	values[2] = imu_values.acc_raw[2];
 }
 
+// Returns an average of the last "filter_size" axis values read from the sensor.
+int16_t get_acc_filtered(uint8_t axis, uint8_t filter_size) {
+	if(axis < 3) {
+		if(imu_configured == true){
+			accAxisFilteringState = 0;
+			accAxisFilteringInProgress = 1;
+			accAxisSelected = axis;
+			accFilterSize = filter_size;
+			while(accAxisFilteringInProgress) {
+				chThdSleepMilliseconds(20);
+			}
+		}
+		return imu_values.acc_filtered[axis];
+	}
+	return 0;
+}
 
+// Saves an average of the last 50 samples for each axis, these values are the calibration/offset values.
+void calibrate_acc(void) {
+	if(imu_configured == true){
+		accCalibrationInProgress = 1;
+		get_acc_filtered(0, 50);
+		accCalibrationInProgress = 1;
+		get_acc_filtered(1, 50);
+		accCalibrationInProgress = 1;
+		get_acc_filtered(2, 50);
+		accCalibrationInProgress = 0;
+	}
+}
+
+// Returns the calibration value of the axis.
 int16_t get_acc_offset(uint8_t axis) {
-	if(axis < NB_AXIS) {
+	if(axis < 3) {
 		return imu_values.acc_offset[axis];
 	}
 	return 0;
 }
 
 float get_acceleration(uint8_t axis) {
-	if(axis < NB_AXIS) {
+	if(axis < 3) {
 		return imu_values.acceleration[axis];
 	}
 	return 0;
 }
 
-
 int16_t get_gyro(uint8_t axis) {
-	if(axis < NB_AXIS) {
+	if(axis < 3) {
 		return imu_values.gyro_raw[axis];
 	}
 	return 0;
 }
 
 void get_gyro_all(int16_t *values) {
-	values[X_AXIS] = imu_values.gyro_raw[X_AXIS];
-	values[Y_AXIS] = imu_values.gyro_raw[Y_AXIS];
-	values[Z_AXIS] = imu_values.gyro_raw[Z_AXIS];
+	values[0] = imu_values.gyro_raw[0];
+	values[1] = imu_values.gyro_raw[1];
+	values[2] = imu_values.gyro_raw[2];
+}
+
+int16_t get_gyro_filtered(uint8_t axis, uint8_t filter_size) {
+	if(axis < 3) {
+		if(imu_configured == true){
+			gyroAxisFilteringState = 0;
+			gyroAxisFilteringInProgress = 1;
+			gyroAxisSelected = axis;
+			gyroFilterSize = filter_size;
+			while(gyroAxisFilteringInProgress) {
+				chThdSleepMilliseconds(20);
+			}
+		}
+		return imu_values.gyro_filtered[axis];
+	}
+	return 0;
 }
 
 int16_t get_gyro_offset(uint8_t axis) {
-	if(axis < NB_AXIS) {
+	if(axis < 3) {
 		return imu_values.gyro_offset[axis];
 	}
 	return 0;
 }
 
+// Saves an average of the last 50 samples for each axis, these values are the calibration/offset values.
+void calibrate_gyro(void) {
+	if(imu_configured == true){
+		gyroCalibrationInProgress = 1;
+		get_gyro_filtered(0, 50);
+		gyroCalibrationInProgress = 1;
+		get_gyro_filtered(1, 50);
+		gyroCalibrationInProgress = 1;
+		get_gyro_filtered(2, 50);
+		gyroCalibrationInProgress = 0;
+	}
+	
+}
+
 float get_gyro_rate(uint8_t axis) {
-	if(axis < NB_AXIS) {
+	if(axis < 3) {
 		return imu_values.gyro_rate[axis];
 	}
 	return 0;

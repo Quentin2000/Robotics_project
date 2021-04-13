@@ -106,7 +106,7 @@ build/obj/vl53l0x_i2c_platform.o: \
  ../../lib/e-puck2_main-processor/ChibiOS_ext/os/hal/ports/STM32/STM32F4xx/stm32_registry.h \
  ../../lib/e-puck2_main-processor/ChibiOS//os/hal/include/mmc_spi.h \
  ../../lib/e-puck2_main-processor/ChibiOS//os/hal/include/serial_usb.h \
- ../../lib/e-puck2_main-processor/src/i2c_bus.h
+ i2c_bus.h
 
 ../../lib/e-puck2_main-processor/src/sensors/VL53L0X/Api/platform/src/../inc/vl53l0x_i2c_platform.h:
 
@@ -322,4 +322,4 @@ mcuconf.h:
 
 ../../lib/e-puck2_main-processor/ChibiOS//os/hal/include/serial_usb.h:
 
-../../lib/e-puck2_main-processor/src/i2c_bus.h:
+i2c_bus.h:
