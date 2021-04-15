@@ -43,7 +43,10 @@ static void timer12_start(void){
 }
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> refs/remotes/origin/main/master
 int main(void)
 {
 
