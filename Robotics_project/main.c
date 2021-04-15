@@ -9,6 +9,8 @@
 #include <main.h>
 #include <chprintf.h>
 #include <motors.h>
+#include <VL53L0X.h>
+#include <imu.h>
 
 messagebus_t bus;
 
@@ -54,12 +56,13 @@ int main(void)
     usb_start();
     //starts timer 12
     timer12_start();
-    //inits the motors
-    motors_init();
     //starts the IMU
     imu_start();
+    //inits the motors
+    motors_init();
+
     //starts the time of flight sensor
-	VL53L0X_start();
+	//VL53L0X_start();
 
 
     /* Infinite loop. */
