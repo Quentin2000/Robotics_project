@@ -1,10 +1,9 @@
+=\=\=\=\=\=\=
+<<<<<<<=HEAD
+>>>>>>>=refs/remotes/origin/main/master
 eclipse.preferences.version=1
 environment/project/0.1450097585/PATH/delimiter=\:
 environment/project/0.1450097585/PATH/operation=replace
-<<<<<<< HEAD
 environment/project/0.1450097585/PATH/value=${BIN-gcc-arm-none-eabi}
-=======
-environment/project/0.1450097585/PATH/value=/usr/local/bin\:/usr/bin\:/bin\:/usr/sbin\:/sbin\:/Users/quentin/Documents/Travail/Robotique/TP1_blinky/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/bin\:/Users/quentin/Documents/Travail/Robotique/TP1_blinky/Tools/gcc-arm-none-eabi-7-2017-q4-major/bin
->>>>>>> refs/remotes/origin/main/master
 environment/project/0.1450097585/append=true
 environment/project/0.1450097585/appendContributed=true
