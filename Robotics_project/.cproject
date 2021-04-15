@@ -31,6 +31,11 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<fileInfo id="0.1450097585.603822027" name="main.c" rcbsApplicability="disable" resourcePath="main.c" toolsToInvoke="org.eclipse.cdt.build.core.settings.holder.1956674252.1741456232">
+						<tool id="org.eclipse.cdt.build.core.settings.holder.1956674252.1741456232" name="GNU C" superClass="org.eclipse.cdt.build.core.settings.holder.1956674252">
+							<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.578585145" languageId="org.eclipse.cdt.core.gcc" languageName="GNU C" sourceContentType="org.eclipse.cdt.core.cSource,org.eclipse.cdt.core.cHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
+						</tool>
+					</fileInfo>
 				</configuration>
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>

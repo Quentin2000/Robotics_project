@@ -42,6 +42,7 @@ static void timer12_start(void){
     gptStartContinuous(&GPTD12, 0xFFFF);
 }
 
+
 int main(void)
 {
 
