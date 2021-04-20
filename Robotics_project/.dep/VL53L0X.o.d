@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 build/obj/VL53L0X.o: VL53L0X.c main.h \
  ../../lib/e-puck2_main-processor/src/msgbus/messagebus.h \
  /Users/quentin/Documents/Travail/Robotique/TP1_blinky/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/unistd.h \
@@ -39,20 +38,6 @@ build/obj/VL53L0X.o: VL53L0X.c main.h \
  /Users/quentin/Documents/Travail/Robotique/TP1_blinky/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/alloca.h \
  ../../lib/e-puck2_main-processor/ChibiOS//os/rt/include/ch.h \
  ../../lib/e-puck2_main-processor/ChibiOS//os/rt/ports/ARMCMx/compilers/GCC/chtypes.h \
-=======
-build/obj/VL53L0X.o: VL53L0X.c \
- ../../lib/e-puck2_main-processor/ChibiOS//os/rt/include/ch.h \
- ../../lib/e-puck2_main-processor/ChibiOS//os/rt/ports/ARMCMx/compilers/GCC/chtypes.h \
- /Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/lib/gcc/arm-none-eabi/7.2.1/include/stddef.h \
- /Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/lib/gcc/arm-none-eabi/7.2.1/include/stdint.h \
- /Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/stdint.h \
- /Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/machine/_default_types.h \
- /Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/features.h \
- /Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/_newlib_version.h \
- /Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_intsup.h \
- /Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_stdint.h \
- /Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/lib/gcc/arm-none-eabi/7.2.1/include/stdbool.h \
->>>>>>> refs/remotes/origin/main/master
  chconf.h \
  ../../lib/e-puck2_main-processor/ChibiOS//os/rt/include/chlicense.h \
  ../../lib/e-puck2_main-processor/ChibiOS//os/rt/include/chsystypes.h \
@@ -148,7 +133,6 @@ build/obj/VL53L0X.o: VL53L0X.c \
  Api/core/inc/../../platform/inc/vl53l0x_platform.h \
  Api/core/inc/../../platform/inc/../../core/inc/vl53l0x_def.h \
  Api/core/inc/../../platform/inc/vl53l0x_platform_log.h \
-<<<<<<< HEAD
  /Users/quentin/Documents/Travail/Robotique/TP1_blinky/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/stdio.h \
  /Users/quentin/Documents/Travail/Robotique/TP1_blinky/Tools/gcc-arm-none-eabi-7-2017-q4-major/lib/gcc/arm-none-eabi/7.2.1/include/stdarg.h \
  /Users/quentin/Documents/Travail/Robotique/TP1_blinky/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/stdio.h \
@@ -156,36 +140,6 @@ build/obj/VL53L0X.o: VL53L0X.c \
  /Users/quentin/Documents/Travail/Robotique/TP1_blinky/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/xlocale.h \
  /Users/quentin/Documents/Travail/Robotique/TP1_blinky/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/strings.h \
  /Users/quentin/Documents/Travail/Robotique/TP1_blinky/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/string.h \
-=======
- /Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/stdio.h \
- /Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/_ansi.h \
- /Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/newlib.h \
- /Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/config.h \
- /Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/machine/ieeefp.h \
- /Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/cdefs.h \
- /Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/lib/gcc/arm-none-eabi/7.2.1/include/stdarg.h \
- /Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/reent.h \
- /Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/_ansi.h \
- /Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_types.h \
- /Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/machine/_types.h \
- /Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/lock.h \
- /Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/types.h \
- /Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/machine/endian.h \
- /Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/machine/_endian.h \
- /Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/select.h \
- /Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_sigset.h \
- /Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_timeval.h \
- /Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/timespec.h \
- /Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_timespec.h \
- /Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_pthreadtypes.h \
- /Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/sched.h \
- /Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/machine/types.h \
- /Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/stdio.h \
- /Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/string.h \
- /Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/xlocale.h \
- /Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/strings.h \
- /Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/string.h \
->>>>>>> refs/remotes/origin/main/master
  Api/core/inc/../../platform/inc/vl53l0x_i2c_platform.h \
  ../../lib/e-puck2_main-processor/ChibiOS//os/various/shell.h \
  ../../lib/e-puck2_main-processor/ChibiOS//os/hal/lib/streams/chprintf.h \
@@ -216,9 +170,8 @@ main.h:
 
 /Users/quentin/Documents/Travail/Robotique/TP1_blinky/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/machine/_default_types.h:
 
-/Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/lib/gcc/arm-none-eabi/7.2.1/include/stddef.h:
+/Users/quentin/Documents/Travail/Robotique/TP1_blinky/Tools/gcc-arm-none-eabi-7-2017-q4-major/lib/gcc/arm-none-eabi/7.2.1/include/stddef.h:
 
-<<<<<<< HEAD
 /Users/quentin/Documents/Travail/Robotique/TP1_blinky/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/types.h:
 
 /Users/quentin/Documents/Travail/Robotique/TP1_blinky/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/machine/_types.h:
@@ -254,31 +207,13 @@ main.h:
 ../../lib/e-puck2_main-processor/src/parameter/parameter.h:
 
 /Users/quentin/Documents/Travail/Robotique/TP1_blinky/Tools/gcc-arm-none-eabi-7-2017-q4-major/lib/gcc/arm-none-eabi/7.2.1/include/stdint.h:
-=======
-/Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/lib/gcc/arm-none-eabi/7.2.1/include/stdint.h:
->>>>>>> refs/remotes/origin/main/master
 
-/Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/stdint.h:
+/Users/quentin/Documents/Travail/Robotique/TP1_blinky/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/stdint.h:
 
-<<<<<<< HEAD
 /Users/quentin/Documents/Travail/Robotique/TP1_blinky/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_intsup.h:
-=======
-/Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/machine/_default_types.h:
 
-/Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/features.h:
-
-/Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/_newlib_version.h:
-
-/Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_intsup.h:
->>>>>>> refs/remotes/origin/main/master
-
-<<<<<<< HEAD
 /Users/quentin/Documents/Travail/Robotique/TP1_blinky/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/stdlib.h:
-=======
-/Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_stdint.h:
->>>>>>> refs/remotes/origin/main/master
 
-<<<<<<< HEAD
 /Users/quentin/Documents/Travail/Robotique/TP1_blinky/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/_ansi.h:
 
 /Users/quentin/Documents/Travail/Robotique/TP1_blinky/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/reent.h:
@@ -290,9 +225,6 @@ main.h:
 ../../lib/e-puck2_main-processor/ChibiOS//os/rt/include/ch.h:
 
 ../../lib/e-puck2_main-processor/ChibiOS//os/rt/ports/ARMCMx/compilers/GCC/chtypes.h:
-=======
-/Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/lib/gcc/arm-none-eabi/7.2.1/include/stdbool.h:
->>>>>>> refs/remotes/origin/main/master
 
 chconf.h:
 
@@ -492,69 +424,19 @@ Api/core/inc/../../platform/inc/../../core/inc/vl53l0x_def.h:
 
 Api/core/inc/../../platform/inc/vl53l0x_platform_log.h:
 
-/Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/stdio.h:
+/Users/quentin/Documents/Travail/Robotique/TP1_blinky/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/stdio.h:
 
-<<<<<<< HEAD
 /Users/quentin/Documents/Travail/Robotique/TP1_blinky/Tools/gcc-arm-none-eabi-7-2017-q4-major/lib/gcc/arm-none-eabi/7.2.1/include/stdarg.h:
-=======
-/Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/_ansi.h:
 
-/Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/newlib.h:
-
-/Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/config.h:
-
-/Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/machine/ieeefp.h:
-
-/Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/cdefs.h:
-
-/Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/lib/gcc/arm-none-eabi/7.2.1/include/stdarg.h:
->>>>>>> refs/remotes/origin/main/master
-
-<<<<<<< HEAD
 /Users/quentin/Documents/Travail/Robotique/TP1_blinky/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/stdio.h:
-=======
-/Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/reent.h:
 
-/Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/_ansi.h:
+/Users/quentin/Documents/Travail/Robotique/TP1_blinky/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/string.h:
 
-/Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_types.h:
+/Users/quentin/Documents/Travail/Robotique/TP1_blinky/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/xlocale.h:
 
-/Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/machine/_types.h:
+/Users/quentin/Documents/Travail/Robotique/TP1_blinky/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/strings.h:
 
-/Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/lock.h:
-
-/Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/types.h:
-
-/Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/machine/endian.h:
-
-/Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/machine/_endian.h:
-
-/Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/select.h:
-
-/Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_sigset.h:
-
-/Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_timeval.h:
-
-/Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/timespec.h:
-
-/Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_timespec.h:
-
-/Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_pthreadtypes.h:
-
-/Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/sched.h:
-
-/Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/machine/types.h:
-
-/Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/stdio.h:
->>>>>>> refs/remotes/origin/main/master
-
-/Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/string.h:
-
-/Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/xlocale.h:
-
-/Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/strings.h:
-
-/Users/jonathanwei/Desktop/Robotique/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/string.h:
+/Users/quentin/Documents/Travail/Robotique/TP1_blinky/Tools/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/string.h:
 
 Api/core/inc/../../platform/inc/vl53l0x_i2c_platform.h:
 

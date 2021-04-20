@@ -98,6 +98,6 @@ uint16_t VL53L0X_get_dist_mm(void);
  *
  * @return 			Move boolean
  */
-uint16_t VL53L0X_get_move(void);
+//uint16_t VL53L0X_get_move(void);
 
 #endif /* VL53L0X_H*/
