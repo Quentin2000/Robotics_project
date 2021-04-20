@@ -15,6 +15,12 @@
 
 #define VL53L0X_ADDR 0x52
 
+/** Message representing a measurement of the time of flight sensor. */
+typedef struct {
+    uint8_t move;
+    uint16_t dist_mm;
+} tof_msg_t;
+
 //////////////////// PROTOTYPES PUBLIC FUNCTIONS /////////////////////
 
 /**
@@ -62,6 +68,13 @@ VL53L0X_Error VL53L0X_getLastMeasure(VL53L0X_Dev_t* device);
 VL53L0X_Error VL53L0X_stopMeasure(VL53L0X_Dev_t* device);
 
 /**
+* @brief   Compares the distance measured with the defined threshold
+* to compute the move variable (to be then shared to the motors).
+*
+*/
+void compute_move(void);
+
+/**
  * @brief Init a thread which uses the distance sensor to
  * continuoulsy measure the distance.
  */
@@ -79,5 +92,12 @@ void VL53L0X_stop(void);
  * @return 			Last distance measured in mm
  */	
 uint16_t VL53L0X_get_dist_mm(void);
+
+/**
+ * @brief 			Return the move order (used to control the motors)
+ *
+ * @return 			Move boolean
+ */
+uint16_t VL53L0X_get_move(void);
 
 #endif /* VL53L0X_H*/

@@ -5,6 +5,7 @@
  * @author  Eliot Ferragni
  */
 
+#include <main.h>
 #include "ch.h"
 #include "hal.h"
 #include "VL53L0X.h"
@@ -13,10 +14,12 @@
 #include "chprintf.h"
 #include "i2c_bus.h"
 #include "usbcfg.h"
+#include "../src/msgbus/messagebus.h"
 
-static uint16_t dist_mm = 0;
+static tof_msg_t tof_values;
 static thread_t *distThd;
 static bool VL53L0X_configured = false;
+static const uint32_t dist_threshold_mm = 2000;
 
 //////////////////// PUBLIC FUNCTIONS /////////////////////////
 static THD_WORKING_AREA(waVL53L0XThd, 512);
@@ -46,14 +49,18 @@ static THD_FUNCTION(VL53L0XThd, arg) {
     while (chThdShouldTerminateX() == false) {
     	if(VL53L0X_configured){
     		VL53L0X_getLastMeasure(&device);
-   			dist_mm = device.Data.LastRangeMeasure.RangeMilliMeter;
+   			tof_values.dist_mm = device.Data.LastRangeMeasure.RangeMilliMeter;
+   			compute_move();
     	}
+
 		chThdSleepMilliseconds(100);
     }
 }
 
 
 VL53L0X_Error VL53L0X_init(VL53L0X_Dev_t* device){
+
+	tof_values.dist_mm = 0;
 
 	VL53L0X_Error status = VL53L0X_ERROR_NONE;
 
@@ -219,6 +226,10 @@ VL53L0X_Error VL53L0X_stopMeasure(VL53L0X_Dev_t* device){
 	return VL53L0X_StopMeasurement(device);
 }
 
+void compute_move(void) {
+	tof_values.move = (tof_values.dist_mm > dist_threshold_mm);
+}
+
 void VL53L0X_start(void){
 
 	if(VL53L0X_configured) {
@@ -242,6 +253,9 @@ void VL53L0X_stop(void) {
 }
 
 uint16_t VL53L0X_get_dist_mm(void) {
-	return dist_mm;
+	return tof_values.dist_mm;
 }
 
+uint8_t VL53L0X_get_move(void) {
+	return tof_values.move;
+}

@@ -62,9 +62,8 @@ int main(void)
     imu_start();
     //inits the motors
     motors_init();
-
     //starts the time of flight sensor
-	//VL53L0X_start();
+	VL53L0X_start();
 
 
     /* Infinite loop. */
