@@ -9,10 +9,12 @@
 #include <main.h>
 #include <chprintf.h>
 #include <motors.h>
-#include <VL53L0X.h>
+#include <sensors/VL53L0X/VL53L0X.h>
+#include <navigation.h>
 #include <sensors/imu.h>
 #include <i2c_bus.h>
-//#include <messagebus.h>
+
+#include <msgbus/messagebus.h>
 
 messagebus_t bus;
 MUTEX_DECL(bus_lock);
@@ -50,30 +52,15 @@ static void timer12_start(void){
 int main(void)
 {
 
-    /*halInit();
-    chSysInit();
-    mpu_init();
 
 
-    //starts the serial communication
-    //serial_start();
     //starts the USB communication
     usb_start();
     //starts timer 12
-   // timer12_start();
-    //starts the IMU
-    i2c_start();
-    imu_start();
+    timer12_start();
     //inits the motors
     motors_init();
-    //starts the time of flight sensor
-	VL53L0X_start();
 
-
-    /* Infinite loop. */
-   // while (1) {
-
-   // }
 
 	 /* System init */
 	    halInit();
@@ -82,6 +69,12 @@ int main(void)
 
 	    i2c_start();
 	    imu_start();
+
+	    //starts the time of flight sensor
+	    VL53L0X_start();
+	    //starts the navigation thread
+	    //navigation_start();
+
 
 	    /** Inits the Inter Process Communication bus. */
 	    messagebus_init(&bus, &bus_lock, &bus_condvar);
