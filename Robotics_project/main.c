@@ -31,13 +31,13 @@ static void serial_start(void)
 	sdStart(&SD3, &ser_cfg); // UART3.
 }
 
-static void timer12_start(void){
+/*static void timer12_start(void){
     //General Purpose Timer configuration   
     //timer 12 is a 16 bit timer so we can measure time
     //to about 65ms with a 1Mhz counter
     static const GPTConfig gpt12cfg = {
-        1000000,        /* 1MHz timer clock in order to measure uS.*/
-        NULL,           /* Timer callback.*/
+        1000000,       // 1MHz timer clock in order to measure uS.
+        NULL,           // Timer callback.
         0,
         0
     };
@@ -45,39 +45,44 @@ static void timer12_start(void){
     gptStart(&GPTD12, &gpt12cfg);
     //let the timer count to max value
     gptStartContinuous(&GPTD12, 0xFFFF);
-}
+}*/
 
 
 
 int main(void)
 {
 
+	halInit();
 
+	chSysInit();
+	mpu_init();
+	  /** Inits the Inter Process Communication bus. */
+	messagebus_init(&bus, &bus_lock, &bus_condvar);
+	serial_start();
+    usb_start();
+
+    i2c_start();
+    imu_start();
+
+    //starts the time of flight sensor
+    VL53L0X_start();
+    //starts the navigation thread
+    navigation_start();
 
     //starts the USB communication
-    usb_start();
+
     //starts timer 12
-    timer12_start();
+   // timer12_start();
     //inits the motors
     motors_init();
 
 
 	 /* System init */
-	    halInit();
-	    chSysInit();
-	    serial_start();
-
-	    i2c_start();
-	    imu_start();
-
-	    //starts the time of flight sensor
-	    VL53L0X_start();
-	    //starts the navigation thread
-	    //navigation_start();
 
 
-	    /** Inits the Inter Process Communication bus. */
-	    messagebus_init(&bus, &bus_lock, &bus_condvar);
+
+
+
 
 
 	    //to change the priority of the thread invoking the function. The main function in this case

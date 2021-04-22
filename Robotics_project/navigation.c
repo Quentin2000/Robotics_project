@@ -35,7 +35,7 @@ void navigation_start(void){
 
 	navThd = chThdCreateStatic(navigation_thd_wa,
                      sizeof(navigation_thd_wa),
-                     NORMALPRIO,
+                     NORMALPRIO+1,
 					 navigation_thd,
                      NULL);
 }
