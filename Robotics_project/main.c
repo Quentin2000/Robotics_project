@@ -79,12 +79,6 @@ int main(void)
 
 	 /* System init */
 
-
-
-
-
-
-
 	    //to change the priority of the thread invoking the function. The main function in this case
 	    //chThdSetPriority(NORMALPRIO+2);
 
@@ -99,7 +93,7 @@ int main(void)
 	        //wait for new measures to be published
 	        messagebus_topic_wait(imu_topic, &imu_values, sizeof(imu_values));
 	        //prints raw values
-	        chprintf((BaseSequentialStream *)&SD3, "%Ax=%-7d Ay=%-7d Az=%-7d Gx=%-7d Gy=%-7d Gz=%-7d\r\n",
+	       /* chprintf((BaseSequentialStream *)&SD3, "%Ax=%-7d Ay=%-7d Az=%-7d Gx=%-7d Gy=%-7d Gz=%-7d\r\n",
 	                imu_values.acc_raw[X_AXIS], imu_values.acc_raw[Y_AXIS], imu_values.acc_raw[Z_AXIS],
 	                imu_values.gyro_raw[X_AXIS], imu_values.gyro_raw[Y_AXIS], imu_values.gyro_raw[Z_AXIS]);
 
@@ -116,7 +110,7 @@ int main(void)
 	        chprintf((BaseSequentialStream *)&SD3, "%Ax=%.2f Ay=%.2f Az=%.2f Gx=%.2f Gy=%.2f Gz=%.2f (%x)\r\n\n",
 	                imu_values.acceleration[X_AXIS], imu_values.acceleration[Y_AXIS], imu_values.acceleration[Z_AXIS],
 	                imu_values.gyro_rate[X_AXIS], imu_values.gyro_rate[Y_AXIS], imu_values.gyro_rate[Z_AXIS],
-	                imu_values.status);
+	                imu_values.status);*/
 
 	        //show_gravity(&imu_values);
 	        chThdSleepMilliseconds(100);

@@ -21,11 +21,15 @@ static THD_WORKING_AREA(navigation_thd_wa, 512);
 static THD_FUNCTION(navigation_thd, arg) {
      (void) arg;
      chRegSetThreadName(__FUNCTION__);
-
+     int16_t gyro_values_raw[3];
 
      while (1) {
     	 if (VL53L0X_get_dist_mm() > DIST_THRESHOLD_MM) {
-    		 chprintf((BaseSequentialStream *)&SD3, "true");
+    		 chprintf((BaseSequentialStream *)&SD3, "can move ");
+
+    		 get_gyro_all(gyro_values_raw);
+    		 motor_control(gyro_values_raw);
+
     	 }
     	 chThdSleepMilliseconds(100);
      }
@@ -40,3 +44,9 @@ void navigation_start(void){
                      NULL);
 }
 
+void motor_control(uint16_t *gyro_values_raw) {
+	//if (gyro_values_raw)
+	chprintf((BaseSequentialStream *)&SD3, "x axis: ", gyro_values_raw[0]);
+	chprintf((BaseSequentialStream *)&SD3, "y axis: ", gyro_values_raw[1]);
+	chprintf((BaseSequentialStream *)&SD3, "z axis: ", gyro_values_raw[2]);
+}
