@@ -62,11 +62,13 @@ int main(void)
 	serial_start();
     usb_start();
 
-    i2c_start();
+    //i2c_start();
     imu_start();
 
     //starts the time of flight sensor
     VL53L0X_start();
+    //inits the motors
+    motors_init();
     //starts the navigation thread
     navigation_start();
 
@@ -74,8 +76,7 @@ int main(void)
 
     //starts timer 12
    // timer12_start();
-    //inits the motors
-    motors_init();
+
 
 
 	 /* System init */
