@@ -128,7 +128,7 @@ e000ed04 l       *ABS*	00000000 SCB_ICSR
 00000000 l    df *ABS*	00000000 _arm_unorddf2.o
 00000000 l    df *ABS*	00000000 main.c
 08001590 l     F .text	0000003c chprintf.constprop.0
-20000820 l     O .data	0000000c ser_cfg.12793
+20000820 l     O .data	0000000c ser_cfg.12795
 00000000 l    df *ABS*	00000000 navigation.c
 080016e0 l     F .text	0000003c chprintf.constprop.0
 08001910 l     F .text	0000004c navigation_thd

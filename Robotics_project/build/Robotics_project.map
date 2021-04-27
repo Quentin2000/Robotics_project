@@ -8802,7 +8802,7 @@ destructors     0x00000000080001c0        0x0
  .data.bus_lock
                 0x000000002000080c       0x14 build/obj/main.o
                 0x000000002000080c                bus_lock
- .data.ser_cfg.12793
+ .data.ser_cfg.12795
                 0x0000000020000820        0xc build/obj/main.o
  .data.imu_addr
                 0x000000002000082c        0x1 build/obj/mpu9250.o

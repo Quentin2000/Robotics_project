@@ -10,6 +10,7 @@
 
 
 void navigation_start(void);
+void motor_control(uint16_t *gyro_values_raw);
 
 
 

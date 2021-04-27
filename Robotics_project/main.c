@@ -100,7 +100,7 @@ int main(void)
 				imu_values.gyro_raw[X_AXIS], imu_values.gyro_raw[Y_AXIS], imu_values.gyro_raw[Z_AXIS]);
 
 		//prints raw values with offset correction
-		/*chprintf((BaseSequentialStream *)&SD3, "%Ax=%-7d Ay=%-7d Az=%-7d Gx=%-7d Gy=%-7d Gz=%-7d\r\n",
+		chprintf((BaseSequentialStream *)&SD3, "%Ax=%-7d Ay=%-7d Az=%-7d Gx=%-7d Gy=%-7d Gz=%-7d\r\n",
 				imu_values.acc_raw[X_AXIS]-imu_values.acc_offset[X_AXIS],
 				imu_values.acc_raw[Y_AXIS]-imu_values.acc_offset[Y_AXIS],
 				imu_values.acc_raw[Z_AXIS]-imu_values.acc_offset[Z_AXIS],
