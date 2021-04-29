@@ -15,26 +15,10 @@
 
 #define BASIC_SPEED 200
 #define MAX_SPEED 1000
-#define DIST_THRESHOLD_MM 50 //threshold value for time of flight in mm
+#define DIST_THRESHOLD_MM 80 //threshold value for time of flight in mm
 static thread_t *navThd;
 
 void direction(imu_msg_t *imu_values);
-
-/*static void timer11_start(void){
-    //General Purpose Timer configuration
-    //timer 11 is a 16 bit timer so we can measure time
-    //to about 65ms with a 1Mhz counter
-    static const GPTConfig gpt11cfg = {
-        1000000,        // 1MHz timer clock in order to measure uS.
-        NULL,           // Timer callback.
-        0,
-        0
-    };
-
-    gptStart(&GPTD11, &gpt11cfg);
-    //let the timer count to max value
-    gptStartContinuous(&GPTD11, 0xFFFF);
-}*/
 
 /**
  * @brief   Thread which updates the measures and publishes them
@@ -70,14 +54,9 @@ void navigation_start(void){
 
 void direction(imu_msg_t *imu_values) {
 
-    // chSysLock();
-    // GPTD11.tim->CNT = 0;
-
-    // time = GPTD11.tim->CNT;
-    // chSysUnlock();
-
 	//threshold value to not move when the robot is too horizontal
 	static float threshold = 1;
+	static uint8_t first_forward = 1;
 	chprintf((BaseSequentialStream *)&SD3, "%threshold=%-7f", threshold);
 	//create a pointer to the array for shorter name
 	float *accel = imu_values->acceleration;
@@ -120,28 +99,34 @@ void direction(imu_msg_t *imu_values) {
 			if (VL53L0X_get_dist_mm() > DIST_THRESHOLD_MM) {
 				left_motor_set_speed(MAX_SPEED);
 				right_motor_set_speed(MAX_SPEED);
-		    	chThdSleepMilliseconds(300);
+		    	if (first_forward){
+		    		chThdSleepMilliseconds(300);
+		    		first_forward = 0;
+		    	}
 			}
 			else {
 				left_motor_set_speed(0);
 				right_motor_set_speed(0);
+				first_forward = 1;
 			}
 		}
 		else if(angle>=0) {
 			forward_semi_angle = 5*M_PI/6;
 			left_motor_set_speed(-BASIC_SPEED-(M_PI-angle)*500/M_PI);
 			right_motor_set_speed(BASIC_SPEED+(M_PI-angle)*500/M_PI);
+			first_forward = 1;
 		}
 		else if(angle<0) {
 			forward_semi_angle = 5*M_PI/6;
 			left_motor_set_speed(BASIC_SPEED-(-M_PI-angle)*500/M_PI);
 			right_motor_set_speed(-BASIC_SPEED+(-M_PI-angle)*500/M_PI);
+			first_forward = 1;
 		}
 	}
 	else /*if(fabs(accel[X_AXIS]) < threshold && fabs(accel[Y_AXIS]) < threshold)*/ {
-		threshold = 1.5;
-		//chprintf((BaseSequentialStream *)&SD3, "Hello");
 		left_motor_set_speed(0);
 		right_motor_set_speed(0);
+		threshold = 1.5;
+		first_forward = 1;
 	}
 }
