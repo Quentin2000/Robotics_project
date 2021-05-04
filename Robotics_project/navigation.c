@@ -19,6 +19,7 @@
 static thread_t *navThd;
 
 void direction(imu_msg_t *imu_values);
+float max_value(float a, float b);
 
 /**
  * @brief   Thread which updates the measures and publishes them
@@ -97,8 +98,8 @@ void direction(imu_msg_t *imu_values) {
 		if(angle>forward_semi_angle || angle<-forward_semi_angle) {
 			forward_semi_angle = 4*M_PI/6;
 			if (VL53L0X_get_dist_mm() > DIST_THRESHOLD_MM) {
-				left_motor_set_speed(MAX_SPEED);
-				right_motor_set_speed(MAX_SPEED);
+				left_motor_set_speed(max_value(200*fabs(accel[Y_AXIS]),MAX_SPEED));
+				right_motor_set_speed(max_value(200*fabs(accel[Y_AXIS]),MAX_SPEED));
 		    	if (first_forward){
 		    		chThdSleepMilliseconds(300);
 		    		first_forward = 0;
@@ -129,4 +130,9 @@ void direction(imu_msg_t *imu_values) {
 		threshold = 1.5;
 		first_forward = 1;
 	}
+}
+
+
+float max_value(float a, float b) {
+	return a < b ? a:b;
 }
