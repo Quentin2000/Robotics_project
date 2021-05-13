@@ -1,8 +1,8 @@
 /*
- * imu_control.h
+ * navigation.h
  *
  *  Created on: 22 Apr 2021
- *      Author: jonathanwei
+ *      Authors: Jonathan Wei & Quentin Delfosse
  */
 
 #ifndef NAVIGATION_H_

@@ -12,7 +12,6 @@
 #include <sensors/VL53L0X/VL53L0X.h>
 #include <navigation.h>
 #include <sensors/imu.h>
-#include <i2c_bus.h>
 #include <msgbus/messagebus.h>
 
 #define NB_SAMPLES_OFFSET     200
@@ -34,15 +33,12 @@ static void serial_start(void)
 }
 
 
-
 int main(void)
 {
-
 	halInit();
-
-	 // System init
 	chSysInit();
 	mpu_init();
+
 	// Inits the Inter Process Communication bus.
 	messagebus_init(&bus, &bus_lock, &bus_condvar);
 	serial_start();
@@ -57,25 +53,13 @@ int main(void)
     //starts the navigation thread
     navigation_start();
 
-	messagebus_topic_t *imu_topic = messagebus_find_topic_blocking(&bus, "/imu");
-	imu_msg_t imu_values;
-
 	//wait 2 sec to be sure the e-puck is in a stable position
 	chThdSleepMilliseconds(2000);
 
 	while(1){
-		//wait for new measures to be published
-		messagebus_topic_wait(imu_topic, &imu_values, sizeof(imu_values));
-
-		//prints values in readable units
-		chprintf((BaseSequentialStream *)&SD3, "%Ax=%.2f Ay=%.2f Az=%.2f Gx=%.2f Gy=%.2f Gz=%.2f (%x)\r\n\n",
-				imu_values.acceleration[X_AXIS], imu_values.acceleration[Y_AXIS], imu_values.acceleration[Z_AXIS],
-				imu_values.gyro_rate[X_AXIS], imu_values.gyro_rate[Y_AXIS], imu_values.gyro_rate[Z_AXIS],
-				imu_values.status);
 
 		chThdSleepMilliseconds(100);
 	}
-
 }
 
 #define STACK_CHK_GUARD 0xe2dee396

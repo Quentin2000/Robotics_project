@@ -1,17 +1,16 @@
 /*
- * imu_control.c
+ * navigation.c
  *
  *  Created on: 22 Apr 2021
- *      Author: jonathanwei
+ *      Authors: Jonathan Wei & Quentin Delfosse
  */
 
-#include "ch.h"
 #include "hal.h"
-#include <chprintf.h>
 #include <sensors/imu.h>
 #include <motors.h>
 #include <math.h>
 #include <sensors/VL53L0X/VL53L0X.h>
+#include <navigation.h>
 #include <led_control.h>
 
 #define BASIC_SPEED 200
@@ -25,7 +24,7 @@ float max_value(float a, float b);
 enum {MOVING = 0, BREAKING = 1, STOPPED = 2, LEFT_TURN = 3, RIGHT_TURN = 4};
 
 /**
- * @brief   Thread which updates the measures and publishes them
+ * @brief   Thread which controls the motors and lights depending on IMU inputs
  */
 static THD_WORKING_AREA(navigation_thd_wa, 512);
 static THD_FUNCTION(navigation_thd, arg) {
@@ -42,7 +41,6 @@ static THD_FUNCTION(navigation_thd, arg) {
 		 direction(&imu_values);
 
     	 chThdSleepMilliseconds(100);
-
      }
 }
 
@@ -58,16 +56,14 @@ void navigation_start(void){
 
 void direction(imu_msg_t *imu_values) {
 
-	//threshold value to not move when the robot is too horizontal
+	//threshold value to stop when the robot is too horizontal
 	static float acc_threshold = 1;
-	static uint8_t first_forward = 1;
-	chprintf((BaseSequentialStream *)&SD3, "%acc_threshold=%-7f", acc_threshold);
-	//create a pointer to the array for shorter name
-	float *accel = imu_values->acceleration;
 
-	/*
-	*   example 1 with trigonometry.
-	*/
+	//boolean indicating that the robot just started moving forward (used to reduce vibrations at the start)
+	static uint8_t first_forward = 1;
+
+	//creates a pointer to the array for shorter name
+	float *accel = imu_values->acceleration;
 
 	/*
 	* Quadrant:
@@ -86,7 +82,8 @@ void direction(imu_msg_t *imu_values) {
 
 	if(fabs(accel[X_AXIS]) > acc_threshold || fabs(accel[Y_AXIS]) > acc_threshold){
 
-		acc_threshold = 0.6; // 0.6 because of the difference between front support and rear support
+		acc_threshold = 0.6; // 0.6 to avoid moving when going from rear to front support at hold
+
 		static float angle_threshold = 5*M_PI/6;
 
 		//clock wise angle in rad with 0 being the back of the e-puck2 (Y axis of the IMU)
@@ -100,12 +97,14 @@ void direction(imu_msg_t *imu_values) {
 
 		if(angle>angle_threshold || angle<-angle_threshold) {
 			angle_threshold = 4*M_PI/6;
+
 			if (VL53L0X_get_dist_mm() > DIST_THRESHOLD_MM) {
 				left_motor_set_speed(max_value(200*fabs(accel[Y_AXIS]),MAX_SPEED));
 				right_motor_set_speed(max_value(200*fabs(accel[Y_AXIS]),MAX_SPEED));
 				led_control(MOVING);
+
 				if (first_forward){
-		    		chThdSleepMilliseconds(300);
+		    		chThdSleepMilliseconds(300); //avoids stopping in case of sudden swinging from front to rear at the start
 		    		first_forward = 0;
 		    	}
 			}
@@ -131,7 +130,7 @@ void direction(imu_msg_t *imu_values) {
 			first_forward = 1;
 		}
 	}
-	else /*if(fabs(accel[X_AXIS]) < acc_threshold && fabs(accel[Y_AXIS]) < acc_threshold)*/ {
+	else {
 		left_motor_set_speed(0);
 		right_motor_set_speed(0);
 		led_control(STOPPED);
