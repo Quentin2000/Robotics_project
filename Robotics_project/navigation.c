@@ -12,6 +12,7 @@
 #include <motors.h>
 #include <math.h>
 #include <sensors/VL53L0X/VL53L0X.h>
+#include <led_control.h>
 
 #define BASIC_SPEED 200
 #define MAX_SPEED 1000
@@ -20,6 +21,8 @@ static thread_t *navThd;
 
 void direction(imu_msg_t *imu_values);
 float max_value(float a, float b);
+
+enum {MOVING = 0, BREAKING = 1, STOPPED = 2, LEFT_TURN = 3, RIGHT_TURN = 4};
 
 /**
  * @brief   Thread which updates the measures and publishes them
@@ -35,7 +38,7 @@ static THD_FUNCTION(navigation_thd, arg) {
 
 		 imu_values.acceleration[X_AXIS] = get_acceleration(X_AXIS);
 		 imu_values.acceleration[Y_AXIS] = get_acceleration(Y_AXIS);
-		 imu_values.acceleration[Z_AXIS] = get_acceleration(Z_AXIS);
+
 		 direction(&imu_values);
 
     	 chThdSleepMilliseconds(100);
@@ -56,9 +59,9 @@ void navigation_start(void){
 void direction(imu_msg_t *imu_values) {
 
 	//threshold value to not move when the robot is too horizontal
-	static float threshold = 1;
+	static float acc_threshold = 1;
 	static uint8_t first_forward = 1;
-	chprintf((BaseSequentialStream *)&SD3, "%threshold=%-7f", threshold);
+	chprintf((BaseSequentialStream *)&SD3, "%acc_threshold=%-7f", acc_threshold);
 	//create a pointer to the array for shorter name
 	float *accel = imu_values->acceleration;
 
@@ -81,10 +84,10 @@ void direction(imu_msg_t *imu_values) {
 	*       FRONT
 	*/
 
-	if(fabs(accel[X_AXIS]) > threshold || fabs(accel[Y_AXIS]) > threshold){
+	if(fabs(accel[X_AXIS]) > acc_threshold || fabs(accel[Y_AXIS]) > acc_threshold){
 
-		threshold = 0.6; // 0.6 because of the difference between front support and rear support
-		static float forward_semi_angle = 5*M_PI/6;
+		acc_threshold = 0.6; // 0.6 because of the difference between front support and rear support
+		static float angle_threshold = 5*M_PI/6;
 
 		//clock wise angle in rad with 0 being the back of the e-puck2 (Y axis of the IMU)
 		float angle = atan2(accel[X_AXIS], accel[Y_AXIS]);
@@ -95,12 +98,13 @@ void direction(imu_msg_t *imu_values) {
 			angle = -2 * M_PI + angle;
 		}
 
-		if(angle>forward_semi_angle || angle<-forward_semi_angle) {
-			forward_semi_angle = 4*M_PI/6;
+		if(angle>angle_threshold || angle<-angle_threshold) {
+			angle_threshold = 4*M_PI/6;
 			if (VL53L0X_get_dist_mm() > DIST_THRESHOLD_MM) {
 				left_motor_set_speed(max_value(200*fabs(accel[Y_AXIS]),MAX_SPEED));
 				right_motor_set_speed(max_value(200*fabs(accel[Y_AXIS]),MAX_SPEED));
-		    	if (first_forward){
+				led_control(MOVING);
+				if (first_forward){
 		    		chThdSleepMilliseconds(300);
 		    		first_forward = 0;
 		    	}
@@ -108,26 +112,30 @@ void direction(imu_msg_t *imu_values) {
 			else {
 				left_motor_set_speed(0);
 				right_motor_set_speed(0);
+				led_control(STOPPED);
 				first_forward = 1;
 			}
 		}
 		else if(angle>=0) {
-			forward_semi_angle = 5*M_PI/6;
+			angle_threshold = 5*M_PI/6;
 			left_motor_set_speed(-BASIC_SPEED-(M_PI-angle)*500/M_PI);
 			right_motor_set_speed(BASIC_SPEED+(M_PI-angle)*500/M_PI);
+			led_control(LEFT_TURN);
 			first_forward = 1;
 		}
 		else if(angle<0) {
-			forward_semi_angle = 5*M_PI/6;
+			angle_threshold = 5*M_PI/6;
 			left_motor_set_speed(BASIC_SPEED-(-M_PI-angle)*500/M_PI);
 			right_motor_set_speed(-BASIC_SPEED+(-M_PI-angle)*500/M_PI);
+			led_control(RIGHT_TURN);
 			first_forward = 1;
 		}
 	}
-	else /*if(fabs(accel[X_AXIS]) < threshold && fabs(accel[Y_AXIS]) < threshold)*/ {
+	else /*if(fabs(accel[X_AXIS]) < acc_threshold && fabs(accel[Y_AXIS]) < acc_threshold)*/ {
 		left_motor_set_speed(0);
 		right_motor_set_speed(0);
-		threshold = 1.5;
+		led_control(STOPPED);
+		acc_threshold = 1.5;
 		first_forward = 1;
 	}
 }
