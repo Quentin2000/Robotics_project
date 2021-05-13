@@ -20,6 +20,7 @@ messagebus_t bus;
 MUTEX_DECL(bus_lock);
 CONDVAR_DECL(bus_condvar);
 
+
 static void serial_start(void)
 {
 	static SerialConfig ser_cfg = {
@@ -31,7 +32,6 @@ static void serial_start(void)
 
 	sdStart(&SD3, &ser_cfg); // UART3.
 }
-
 
 int main(void)
 {

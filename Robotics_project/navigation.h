@@ -10,7 +10,7 @@
 
 
 void navigation_start(void);
-
+float max_value(float a, float b);
 
 
 #endif /* NAVIGATION_H_ */

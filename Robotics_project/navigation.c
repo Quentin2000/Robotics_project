@@ -16,12 +16,16 @@
 #define BASIC_SPEED 200
 #define MAX_SPEED 1000
 #define DIST_THRESHOLD_MM 80 //threshold value for time of flight in mm
+#define FORWARD_ANGLE_THRESHOLD 5*M_PI/6
+#define TURNING_ANGLE_THRESHOLD 4*M_PI/6
+#define MOVING_ACC_THRESHOLD 1.5
+#define STOPPING_ACC_THRESHOLD 0.6 // to avoid moving when going from rear to front support at hold
 static thread_t *navThd;
 
-void direction(imu_msg_t *imu_values);
-float max_value(float a, float b);
-
 enum {MOVING = 0, BREAKING = 1, STOPPED = 2, LEFT_TURN = 3, RIGHT_TURN = 4};
+
+void direction(imu_msg_t *imu_values);
+
 
 /**
  * @brief   Thread which controls the motors and lights depending on IMU inputs
@@ -53,11 +57,10 @@ void navigation_start(void){
                      NULL);
 }
 
-
 void direction(imu_msg_t *imu_values) {
 
-	//threshold value to stop when the robot is too horizontal
-	static float acc_threshold = 1;
+	//threshold value to move if robot is not on flat surface
+	static float acc_threshold = MOVING_ACC_THRESHOLD;
 
 	//boolean indicating that the robot just started moving forward (used to reduce vibrations at the start)
 	static uint8_t first_forward = 1;
@@ -82,9 +85,9 @@ void direction(imu_msg_t *imu_values) {
 
 	if(fabs(accel[X_AXIS]) > acc_threshold || fabs(accel[Y_AXIS]) > acc_threshold){
 
-		acc_threshold = 0.6; // 0.6 to avoid moving when going from rear to front support at hold
+		acc_threshold = STOPPING_ACC_THRESHOLD;
 
-		static float angle_threshold = 5*M_PI/6;
+		static float angle_threshold = FORWARD_ANGLE_THRESHOLD;
 
 		//clock wise angle in rad with 0 being the back of the e-puck2 (Y axis of the IMU)
 		float angle = atan2(accel[X_AXIS], accel[Y_AXIS]);
@@ -96,7 +99,7 @@ void direction(imu_msg_t *imu_values) {
 		}
 
 		if(angle>angle_threshold || angle<-angle_threshold) {
-			angle_threshold = 4*M_PI/6;
+			angle_threshold = TURNING_ANGLE_THRESHOLD;
 
 			if (VL53L0X_get_dist_mm() > DIST_THRESHOLD_MM) {
 				left_motor_set_speed(max_value(200*fabs(accel[Y_AXIS]),MAX_SPEED));
@@ -116,14 +119,14 @@ void direction(imu_msg_t *imu_values) {
 			}
 		}
 		else if(angle>=0) {
-			angle_threshold = 5*M_PI/6;
+			angle_threshold = FORWARD_ANGLE_THRESHOLD;
 			left_motor_set_speed(-BASIC_SPEED-(M_PI-angle)*500/M_PI);
 			right_motor_set_speed(BASIC_SPEED+(M_PI-angle)*500/M_PI);
 			led_control(LEFT_TURN);
 			first_forward = 1;
 		}
 		else if(angle<0) {
-			angle_threshold = 5*M_PI/6;
+			angle_threshold = FORWARD_ANGLE_THRESHOLD;
 			left_motor_set_speed(BASIC_SPEED-(-M_PI-angle)*500/M_PI);
 			right_motor_set_speed(-BASIC_SPEED+(-M_PI-angle)*500/M_PI);
 			led_control(RIGHT_TURN);
@@ -134,11 +137,10 @@ void direction(imu_msg_t *imu_values) {
 		left_motor_set_speed(0);
 		right_motor_set_speed(0);
 		led_control(STOPPED);
-		acc_threshold = 1.5;
+		acc_threshold = MOVING_ACC_THRESHOLD;
 		first_forward = 1;
 	}
 }
-
 
 float max_value(float a, float b) {
 	return a < b ? a:b;
