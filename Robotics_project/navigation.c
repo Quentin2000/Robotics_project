@@ -18,8 +18,8 @@
 #define DIST_THRESHOLD_MM 80 //threshold value for time of flight in mm
 #define FORWARD_ANGLE_THRESHOLD 5*M_PI/6
 #define TURNING_ANGLE_THRESHOLD 4*M_PI/6
-#define MOVING_ACC_THRESHOLD 1.5
-#define STOPPING_ACC_THRESHOLD 0.6 // to avoid moving when going from rear to front support at hold
+#define THRESHOLD_STOPPED 1.5 //threshold while stopped
+#define THRESHOLD_MOVING 0.6 // threshold while moving
 static thread_t *navThd;
 
 enum {MOVING = 0, BREAKING = 1, STOPPED = 2, LEFT_TURN = 3, RIGHT_TURN = 4};
@@ -59,8 +59,8 @@ void navigation_start(void){
 
 void direction(imu_msg_t *imu_values) {
 
-	//threshold value to move if robot is not on flat surface
-	static float acc_threshold = MOVING_ACC_THRESHOLD;
+	//threshold value to start moving if robot is not on flat surface
+	static float acc_threshold = THRESHOLD_STOPPED;
 
 	//boolean indicating that the robot just started moving forward (used to reduce vibrations at the start)
 	static uint8_t first_forward = 1;
@@ -85,7 +85,7 @@ void direction(imu_msg_t *imu_values) {
 
 	if(fabs(accel[X_AXIS]) > acc_threshold || fabs(accel[Y_AXIS]) > acc_threshold){
 
-		acc_threshold = STOPPING_ACC_THRESHOLD;
+		acc_threshold = THRESHOLD_MOVING;
 
 		static float angle_threshold = FORWARD_ANGLE_THRESHOLD;
 
@@ -137,7 +137,7 @@ void direction(imu_msg_t *imu_values) {
 		left_motor_set_speed(0);
 		right_motor_set_speed(0);
 		led_control(STOPPED);
-		acc_threshold = MOVING_ACC_THRESHOLD;
+		acc_threshold = THRESHOLD_STOPPED;
 		first_forward = 1;
 	}
 }
