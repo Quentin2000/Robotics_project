@@ -18,8 +18,8 @@
 #define DIST_THRESHOLD_MM 80 //threshold value for time of flight in mm
 #define FORWARD_ANGLE_THRESHOLD 5*M_PI/6
 #define TURNING_ANGLE_THRESHOLD 4*M_PI/6
-#define THRESHOLD_STOPPED 1.5 //threshold while stopped
-#define THRESHOLD_MOVING 0.6 // threshold while moving
+#define THRESHOLD_STOPPED 1.5 //threshold to start moving while stopped
+#define THRESHOLD_MOVING 0.6 // threshold to stop while moving
 static thread_t *navThd;
 
 enum {MOVING = 0, BREAKING = 1, STOPPED = 2, LEFT_TURN = 3, RIGHT_TURN = 4};
@@ -59,7 +59,6 @@ void navigation_start(void){
 
 void direction(imu_msg_t *imu_values) {
 
-	//threshold value to start moving if robot is not on flat surface
 	static float acc_threshold = THRESHOLD_STOPPED;
 
 	//boolean indicating that the robot just started moving forward (used to reduce vibrations at the start)
@@ -101,7 +100,7 @@ void direction(imu_msg_t *imu_values) {
 		if(angle>angle_threshold || angle<-angle_threshold) {
 			angle_threshold = TURNING_ANGLE_THRESHOLD;
 
-			if (VL53L0X_get_dist_mm() > DIST_THRESHOLD_MM) {
+			if (VL53L0X_get_dist_mm() > DIST_THRESHOLD_MM) { //move forward
 				left_motor_set_speed(max_value(200*fabs(accel[Y_AXIS]),MAX_SPEED));
 				right_motor_set_speed(max_value(200*fabs(accel[Y_AXIS]),MAX_SPEED));
 				led_control(MOVING);
@@ -111,21 +110,21 @@ void direction(imu_msg_t *imu_values) {
 		    		first_forward = 0;
 		    	}
 			}
-			else {
+			else { //stop
 				left_motor_set_speed(0);
 				right_motor_set_speed(0);
 				led_control(STOPPED);
 				first_forward = 1;
 			}
 		}
-		else if(angle>=0) {
+		else if(angle>=0) { //turn left
 			angle_threshold = FORWARD_ANGLE_THRESHOLD;
 			left_motor_set_speed(-BASIC_SPEED-(M_PI-angle)*500/M_PI);
 			right_motor_set_speed(BASIC_SPEED+(M_PI-angle)*500/M_PI);
 			led_control(LEFT_TURN);
 			first_forward = 1;
 		}
-		else if(angle<0) {
+		else if(angle<0) { //turn right
 			angle_threshold = FORWARD_ANGLE_THRESHOLD;
 			left_motor_set_speed(BASIC_SPEED-(-M_PI-angle)*500/M_PI);
 			right_motor_set_speed(-BASIC_SPEED+(-M_PI-angle)*500/M_PI);
@@ -133,7 +132,7 @@ void direction(imu_msg_t *imu_values) {
 			first_forward = 1;
 		}
 	}
-	else {
+	else { //stop
 		left_motor_set_speed(0);
 		right_motor_set_speed(0);
 		led_control(STOPPED);
